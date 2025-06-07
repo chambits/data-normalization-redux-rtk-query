@@ -1,5 +1,6 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import type { Category, CategoriesState } from "../../types";
+import { apiSlice } from "../api/apiSlice";
 
 const categoriesAdapter = createEntityAdapter<Category>({
   sortComparer: (a, b) => a.name.localeCompare(b.name),
@@ -13,6 +14,25 @@ const categoriesSlice = createSlice({
     addManyCategories: categoriesAdapter.addMany,
     updateCategory: categoriesAdapter.updateOne,
     removeCategory: categoriesAdapter.removeOne,
+  },
+  extraReducers: (builder) => {
+    builder
+      // Sync with RTK Query results - getCategories
+      .addMatcher(
+        apiSlice.endpoints.getCategories.matchFulfilled,
+        (state, action) => {
+          categoriesAdapter.setAll(state, action.payload);
+        }
+      )
+      // Also sync categories from products query
+      .addMatcher(
+        apiSlice.endpoints.getProducts.matchFulfilled,
+        (state, action) => {
+          if (action.payload.categories) {
+            categoriesAdapter.upsertMany(state, action.payload.categories);
+          }
+        }
+      );
   },
 });
 

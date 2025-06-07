@@ -1,45 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import { useAppDispatch } from "./hooks";
 import {
-  addManyProducts,
-  addManyCategories,
-  addManyUsers,
-  addManyReviews,
-  setLoadingStatus,
-} from "./store/slices";
-import {
-  mockCategories,
-  mockUsers,
-  mockReviews,
-  mockProducts,
-} from "./data/mockData";
+  useGetProductsQuery,
+  useGetCategoriesQuery,
+} from "./store/api/apiSlice";
 import Header from "./components/Header";
 import CategoryFilter from "./components/CategoryFilter";
 import ProductGrid from "./components/ProductGrid";
 import ProductDetail from "./components/ProductDetail";
 import Stats from "./components/Stats";
+import LoadingSpinner from "./components/LoadingSpinner";
+import ErrorMessage from "./components/ErrorMessage";
 
 const AppContent: React.FC = () => {
-  const dispatch = useAppDispatch();
   const [selectedProductId, setSelectedProductId] = useState<number | null>(
     null
   );
 
-  useEffect(() => {
-    // Simulate loading data
-    dispatch(setLoadingStatus("loading"));
+  // RTK Query hooks replace manual data loading
+  const { error: productsError, isLoading: productsLoading } =
+    useGetProductsQuery();
 
-    setTimeout(() => {
-      // Load mock data into normalized state
-      dispatch(addManyCategories(mockCategories));
-      dispatch(addManyUsers(mockUsers));
-      dispatch(addManyReviews(mockReviews));
-      dispatch(addManyProducts(mockProducts));
-      dispatch(setLoadingStatus("succeeded"));
-    }, 1000);
-  }, [dispatch]);
+  const { error: categoriesError, isLoading: categoriesLoading } =
+    useGetCategoriesQuery();
+
+  const isLoading = productsLoading || categoriesLoading;
+  const error = productsError || categoriesError;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen gradient-bg">
+        <Header />
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen gradient-bg">
+        <Header />
+        <ErrorMessage error={error} />
+      </div>
+    );
+  }
 
   const handleProductClick = (productId: number) => {
     setSelectedProductId(productId);
@@ -63,12 +68,11 @@ const AppContent: React.FC = () => {
           <>
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                Welcome to NormalizedStore
+                Welcome to NormalizedStore with RTK Query
               </h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Experience the power of normalized data in React. Browse our
-                products with lightning-fast updates and consistent state
-                management.
+                Experience the power of RTK Query with normalized data. Server
+                state management with automatic caching and synchronization.
               </p>
             </div>
 

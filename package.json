@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "json-server": "json-server --watch db.json --port 3001",
+    "dev:api": "npx json-server --watch db.json --port 3001",
+    "dev:app": "vite"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
@@ -27,6 +30,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "json-server": "^1.0.0-beta.3",
     "postcss": "^8.5.4",
     "tailwindcss": "^3.3.6",
     "typescript": "~5.8.3",
