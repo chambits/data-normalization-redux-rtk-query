@@ -92,19 +92,6 @@ yarn dev
 - `yarn build` - Build for production
 - `yarn preview` - Preview production build
 
-## 🌐 API Endpoints
-
-JSON Server runs on `http://localhost:3001` with the following endpoints:
-
-- `GET /products` - Get all products with embedded reviews and categories
-- `GET /products/:id` - Get single product
-- `POST /products` - Create new product
-- `PATCH /products/:id` - Update product
-- `DELETE /products/:id` - Delete product
-- `GET /categories` - Get all categories
-- `GET /users` - Get all users
-- `GET /reviews` - Get all reviews
-
 ## 📁 Project Structure
 
 ```
