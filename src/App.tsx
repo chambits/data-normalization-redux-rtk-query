@@ -1,23 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { Provider } from "react-redux";
-import { store } from "./store/store";
-import {
-  useGetProductsQuery,
-  useGetCategoriesQuery,
-} from "./store/api/apiSlice";
-import Header from "./components/Header";
-import CategoryFilter from "./components/CategoryFilter";
-import ProductGrid from "./components/ProductGrid";
-import ProductDetail from "./components/ProductDetail";
-import Stats from "./components/Stats";
-import LoadingSpinner from "./components/LoadingSpinner";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import ErrorMessage from "./components/ErrorMessage";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import LoadingSpinner from "./components/LoadingSpinner";
+import HomePage from "./pages/HomePage";
+import NormalizationPage from "./pages/NormalizationPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import {
+  useGetCategoriesQuery,
+  useGetProductsQuery,
+} from "./store/api/apiSlice";
+import { store } from "./store/store";
 
 const AppContent: React.FC = () => {
-  const [selectedProductId, setSelectedProductId] = useState<number | null>(
-    null
-  );
-
   // RTK Query hooks replace manual data loading
   const { error: productsError, isLoading: productsLoading } =
     useGetProductsQuery();
@@ -30,58 +27,39 @@ const AppContent: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen gradient-bg">
+      <div className="min-h-screen flex flex-col gradient-bg">
         <Header />
-        <LoadingSpinner />
+        <div className="flex-1">
+          <LoadingSpinner />
+        </div>
+        <Footer />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen gradient-bg">
+      <div className="min-h-screen flex flex-col gradient-bg">
         <Header />
-        <ErrorMessage error={error} />
+        <div className="flex-1">
+          <ErrorMessage error={error} />
+        </div>
+        <Footer />
       </div>
     );
   }
 
-  const handleProductClick = (productId: number) => {
-    setSelectedProductId(productId);
-  };
-
-  const handleBackToProducts = () => {
-    setSelectedProductId(null);
-  };
-
   return (
-    <div className="min-h-screen gradient-bg">
+    <div className="min-h-screen flex flex-col gradient-bg">
       <Header />
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {selectedProductId ? (
-          <ProductDetail
-            productId={selectedProductId}
-            onBack={handleBackToProducts}
-          />
-        ) : (
-          <>
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                Welcome to NormalizedStore with RTK Query
-              </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Experience the power of RTK Query with normalized data. Server
-                state management with automatic caching and synchronization.
-              </p>
-            </div>
-
-            <Stats />
-            <CategoryFilter />
-            <ProductGrid onProductClick={handleProductClick} />
-          </>
-        )}
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/normalization" element={<NormalizationPage />} />
+        </Routes>
       </main>
+      <Footer />
     </div>
   );
 };
@@ -89,7 +67,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <AppContent />
+      <Router>
+        <AppContent />
+      </Router>
     </Provider>
   );
 };

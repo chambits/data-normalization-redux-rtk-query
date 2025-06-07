@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { ShoppingBag, Search, User, Plus } from "lucide-react";
 import ProductForm from "./ProductForm";
 
@@ -8,18 +9,20 @@ const Header: React.FC = () => {
   const handleProductFormSuccess = () => {
     setShowProductForm(false);
   };
-
   return (
     <>
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
+            <Link
+              to="/"
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            >
               <ShoppingBag className="w-8 h-8 text-blue-600" />
               <h1 className="text-xl font-bold text-gray-900">
                 NormalizedStore
               </h1>
-            </div>
+            </Link>
 
             <div className="hidden md:flex items-center gap-4 flex-1 max-w-md mx-8">
               <div className="relative flex-1">
@@ -33,6 +36,12 @@ const Header: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link
+                to="/normalization"
+                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                📚 Learn Normalization
+              </Link>
               <button
                 onClick={() => setShowProductForm(true)}
                 className="inline-flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"

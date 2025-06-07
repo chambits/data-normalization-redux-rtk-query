@@ -75,7 +75,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ productId }) => {
           {/* Product Actions Menu */}
           <div className="absolute top-3 right-3">
             <button
-              onClick={() => setShowMenu(!showMenu)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowMenu(!showMenu);
+              }}
               className="bg-white/90 backdrop-blur p-1 rounded-full hover:bg-white transition-colors"
               disabled={isDeleting}
             >
@@ -85,7 +88,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ productId }) => {
             {showMenu && (
               <div className="absolute right-0 mt-1 bg-white rounded-lg shadow-lg border py-1 z-10 min-w-[120px]">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     setShowEditForm(true);
                     setShowMenu(false);
                   }}
@@ -95,7 +99,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ productId }) => {
                   Edit
                 </button>
                 <button
-                  onClick={handleDelete}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete();
+                  }}
                   disabled={isDeleting}
                   className="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600 disabled:opacity-50"
                 >
